@@ -1,5 +1,14 @@
 from __future__ import annotations
 
+import sys
+from pathlib import Path
+
+# Ensure the api/ directory is on the Python path so that
+# absolute imports like "from models.schemas import ..." work.
+_api_dir = str(Path(__file__).resolve().parent)
+if _api_dir not in sys.path:
+    sys.path.insert(0, _api_dir)
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -9,7 +18,7 @@ app = FastAPI(title="TikTok Bulk Downloader API", version="1.0.0")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "https://tiktok-video-downloder-olrgqhtha-rao-ikram-ullahs-projects.vercel.app"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

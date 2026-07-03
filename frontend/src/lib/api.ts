@@ -59,7 +59,7 @@ export interface HealthResponse {
 }
 
 export async function fetchHealth(): Promise<HealthResponse> {
-  const res = await fetch(`${BASE}/health`).catch(() => null);
+  const res = await fetch(`${BASE}/api/health`).catch(() => null);
   if (!res || !res.ok) return { status: "error", cookies_configured: false, auth_available: false };
   return res.json();
 }
