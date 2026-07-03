@@ -1,0 +1,24 @@
+Collecting curl-cffi
+  Downloading curl_cffi-0.15.0-cp310-abi3-win_amd64.whl.metadata (18 kB)
+Requirement already satisfied: cffi>=2.0.0 in c:\users\user\appdata\local\programs\python\python311\lib\site-packages (from curl-cffi) (2.0.0)
+Requirement already satisfied: certifi>=2024.2.2 in c:\users\user\appdata\local\programs\python\python311\lib\site-packages (from curl-cffi) (2026.2.25)
+Collecting rich (from curl-cffi)
+  Using cached rich-15.0.0-py3-none-any.whl.metadata (18 kB)
+Requirement already satisfied: pycparser in c:\users\user\appdata\local\programs\python\python311\lib\site-packages (from cffi>=2.0.0->curl-cffi) (3.0)
+Collecting markdown-it-py>=2.2.0 (from rich->curl-cffi)
+  Using cached markdown_it_py-4.2.0-py3-none-any.whl.metadata (7.4 kB)
+Collecting pygments<3.0.0,>=2.13.0 (from rich->curl-cffi)
+  Using cached pygments-2.20.0-py3-none-any.whl.metadata (2.5 kB)
+Collecting mdurl~=0.1 (from markdown-it-py>=2.2.0->rich->curl-cffi)
+  Using cached mdurl-0.1.2-py3-none-any.whl.metadata (1.6 kB)
+Downloading curl_cffi-0.15.0-cp310-abi3-win_amd64.whl (1.7 MB)
+   ---------------------------------------- 1.7/1.7 MB 411.3 kB/s eta 0:00:00
+Using cached rich-15.0.0-py3-none-any.whl (310 kB)
+Using cached markdown_it_py-4.2.0-py3-none-any.whl (91 kB)
+Using cached pygments-2.20.0-py3-none-any.whl (1.2 MB)
+Using cached mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+Installing collected packages: pygments, mdurl, markdown-it-py, rich, curl-cffi
+Successfully installed curl-cffi-0.15.0 markdown-it-py-4.2.0 mdurl-0.1.2 pygments-2.20.0 rich-15.0.0
+
+[notice] A new release of pip is available: 24.0 -> 26.1.2
+[notice] To update, run: python.exe -m pip install --upgrade pip

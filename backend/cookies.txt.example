@@ -1,0 +1,38 @@
+# TikTok cookies — required to list and download videos
+#
+# TikTok requires a logged-in session. Export your browser cookies here.
+# The file must be in Netscape/Mozilla format (all methods below produce this).
+#
+# ══════════════════════════════════════════════════════════════
+#  OPTION 1 — Browser extension (easiest, no tools needed)
+# ══════════════════════════════════════════════════════════════
+#
+#   Chrome:  Install "Get cookies.txt LOCALLY" from the Chrome Web Store
+#   Firefox: Install "cookies.txt" from Firefox Add-ons
+#
+#   1. Make sure you are logged in to https://www.tiktok.com
+#   2. Click the extension icon on the TikTok tab
+#   3. Click "Export" → save the file as  backend/cookies.txt
+#   4. Restart the backend
+#
+# ══════════════════════════════════════════════════════════════
+#  OPTION 2 — Command line (browser must be fully closed first)
+# ══════════════════════════════════════════════════════════════
+#
+#   Requires yt-dlp to be installed:  pip install yt-dlp
+#
+#   Close Chrome completely, then run:
+#
+#     yt-dlp --cookies-from-browser chrome \
+#            --cookies-to-file backend/cookies.txt \
+#            "https://www.tiktok.com/" --skip-download
+#
+#   Replace "chrome" with firefox / edge / safari as needed.
+#
+# ══════════════════════════════════════════════════════════════
+#  NOTES
+# ══════════════════════════════════════════════════════════════
+#
+#  • Cookies expire after a few weeks — re-export if downloads fail.
+#  • Never commit cookies.txt to source control (it's your TikTok session).
+#  • Add  cookies.txt  to your .gitignore file.
