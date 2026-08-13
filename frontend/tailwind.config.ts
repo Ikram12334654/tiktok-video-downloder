@@ -40,12 +40,17 @@ const config: Config = {
           "0%": { opacity: "0", transform: "translateY(16px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
+        sheen: {
+          "0%":   { transform: "translateX(-60%) skewX(-20deg)" },
+          "100%": { transform: "translateX(320%) skewX(-20deg)" },
+        },
       },
       animation: {
         shimmer: "shimmer 1.4s linear infinite",
         "skeleton-pop": "skeleton-pop 0.35s ease-out both",
         "fade-in": "fade-in 0.3s ease-out",
         "slide-up": "slide-up 0.4s ease-out",
+        sheen: "sheen 1.8s ease-in-out infinite",
       },
     },
   },

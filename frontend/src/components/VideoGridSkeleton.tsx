@@ -18,9 +18,18 @@ function SkeletonCard({ index }: { index: number }) {
 
   return (
     <div
-      className="animate-skeleton-pop bg-surface-1 rounded-xl overflow-hidden border border-white/5"
+      className="relative animate-skeleton-pop bg-surface-1 rounded-xl overflow-hidden border border-white/5"
       style={{ animationDelay: `${popDelay}ms` }}
     >
+      {/* Diagonal "slash" sweep — a moving highlight across the whole card
+          signaling active loading, layered above the per-row shimmer. */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden z-10">
+        <div
+          className="absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-sheen"
+          style={{ animationDelay: `${(index % 8) * 150}ms` }}
+        />
+      </div>
+
       {/* Thumbnail — 9:16 */}
       <div className="relative aspect-[9/16] overflow-hidden">
         <div

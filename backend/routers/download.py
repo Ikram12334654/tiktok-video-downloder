@@ -18,7 +18,7 @@ from stream_zip import ZIP_64, stream_zip
 from models.schemas import VideoMeta
 from services.tiktok import download_video
 from store import zip_sessions
-from utils.helpers import sanitize_folder_name
+from utils.helpers import get_tmp_root, sanitize_folder_name
 
 router = APIRouter()
 
@@ -38,7 +38,7 @@ async def stream_video(
     filename: str = Query(""),
 ) -> StreamingResponse:
     """Download a single video: yt-dlp saves to a temp file, we stream it."""
-    tmp_dir = tempfile.mkdtemp(prefix="tikdl_single_")
+    tmp_dir = tempfile.mkdtemp(prefix="tikdl_single_", dir=get_tmp_root())
     try:
         file_path, title, filesize, ext = await asyncio.to_thread(
             download_video, webpage_url, tmp_dir
@@ -124,7 +124,7 @@ def _member_files(folder: str, videos: list[VideoMeta]):
     modified_at = datetime.now(timezone.utc)
 
     for video in videos:
-        tmp_dir = tempfile.mkdtemp(prefix="tikdl_zip_")
+        tmp_dir = tempfile.mkdtemp(prefix="tikdl_zip_", dir=get_tmp_root())
         try:
             try:
                 file_path, title, filesize, ext = download_video(video.webpage_url, tmp_dir)

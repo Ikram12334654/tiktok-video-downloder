@@ -5,6 +5,8 @@ import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 
+from utils.helpers import get_tmp_root
+
 
 @dataclass
 class VideoJobState:
@@ -33,7 +35,7 @@ _jobs: dict[str, BulkJob] = {}
 
 
 def create_job(job_id: str, account: str, videos) -> BulkJob:
-    temp_dir = tempfile.mkdtemp(prefix="tikdl_")
+    temp_dir = tempfile.mkdtemp(prefix="tikdl_", dir=get_tmp_root())
     videos_state = {v.id: VideoJobState(video_id=v.id, title=v.title) for v in videos}
     job = BulkJob(
         job_id=job_id,

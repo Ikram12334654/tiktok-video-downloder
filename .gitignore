@@ -27,6 +27,9 @@ cookies.txt
 # Downloads
 downloads/
 
+# Ephemeral download temp dir (project-local, see utils/helpers.get_tmp_root)
+backend/tmp/
+
 # IDE
 .vscode/
 .idea/

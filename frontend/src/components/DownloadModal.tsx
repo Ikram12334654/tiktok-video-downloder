@@ -31,15 +31,18 @@ export default function DownloadModal({
   const errorCount = videos.filter((v) => v.status === "error").length;
   const total = totalCount;
 
+  const inFlightFraction = useMemo(
+    () =>
+      videos
+        .filter((v) => v.status === "downloading")
+        .reduce((sum, v) => sum + (v.total > 0 ? Math.min(1, v.downloaded / v.total) : 0), 0),
+    [videos]
+  );
+  const overallPercent = total > 0 ? Math.min(100, ((doneCount + inFlightFraction) / total) * 100) : 0;
   const totalDownloaded = useMemo(
     () => videos.reduce((sum, v) => sum + v.downloaded, 0),
     [videos]
   );
-  const totalBytes = useMemo(
-    () => videos.reduce((sum, v) => sum + (v.total || 0), 0),
-    [videos]
-  );
-  const overallPercent = totalBytes > 0 ? Math.min(100, (totalDownloaded / totalBytes) * 100) : 0;
   const totalSpeed = videos
     .filter((v) => v.status === "downloading")
     .reduce((sum, v) => sum + v.speed, 0);
@@ -136,7 +139,7 @@ export default function DownloadModal({
               <span>
                 {isZipping
                   ? `${doneCount} video${doneCount !== 1 ? "s" : ""} downloaded · creating ZIP…`
-                  : `${formatFileSize(totalDownloaded)} / ${totalBytes > 0 ? formatFileSize(totalBytes) : "…"}`}
+                  : `${doneCount}/${total} video${total !== 1 ? "s" : ""} · ${formatFileSize(totalDownloaded)}`}
               </span>
               {!isZipping && <span>{Math.round(overallPercent)}%</span>}
             </div>
@@ -207,8 +210,8 @@ function VideoRow({ state }: { state: BulkVideoState }) {
           {state.title}
         </p>
 
-        {isError && state.error && (
-          <p className="text-[11px] text-red-400/70 leading-snug line-clamp-2">{state.error}</p>
+        {isError && (
+          <p className="text-[11px] text-red-400/70 leading-snug">Failed to download</p>
         )}
 
         {isDownloading && (

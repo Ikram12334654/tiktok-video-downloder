@@ -11,16 +11,33 @@ TikTok service:
 
 import json
 import os
+import shutil
 import subprocess
 import time
+from functools import lru_cache
+from io import BytesIO
 from pathlib import Path
 from typing import Any, Callable
 
 import httpx
 import yt_dlp
+from PIL import Image
 
 from models.schemas import VideoMeta
 from utils.helpers import extract_account, format_upload_date
+
+
+@lru_cache(maxsize=None)
+def _resolve_binary(name: str) -> str:
+    """Locate an ffmpeg-suite binary on PATH, cached for the process lifetime."""
+    path = shutil.which(name)
+    if not path:
+        raise RuntimeError(
+            f"'{name}' was not found on PATH. Install ffmpeg "
+            "(e.g. `choco install ffmpeg` on Windows) and restart the backend "
+            "server — a running process keeps the PATH it was launched with."
+        )
+    return path
 
 # ─── tikwm (slideshow images only) ───────────────────────────────────────────
 _TIKWM_BASE = "https://www.tikwm.com"
@@ -134,7 +151,7 @@ def _audio_duration(audio_path: str) -> float | None:
     """Return audio duration in seconds using ffprobe."""
     try:
         result = subprocess.run(
-            ["ffprobe", "-v", "quiet", "-print_format", "json", "-show_streams", audio_path],
+            [_resolve_binary("ffprobe"), "-v", "quiet", "-print_format", "json", "-show_streams", audio_path],
             capture_output=True, timeout=15,
         )
         for stream in json.loads(result.stdout).get("streams", []):
@@ -183,7 +200,13 @@ def _slideshow_to_mp4(
             )
             r.raise_for_status()
             p = Path(output_dir) / f"_slide_{i:03d}.jpg"
-            p.write_bytes(r.content)
+            try:
+                img = Image.open(BytesIO(r.content))
+                img.convert("RGB").save(p, "JPEG", quality=95)
+            except Exception:
+                # Pillow couldn't identify/decode it — fall back to raw bytes in
+                # case ffmpeg can still make sense of it directly.
+                p.write_bytes(r.content)
             img_paths.append(p)
         except Exception:
             pass
@@ -197,7 +220,7 @@ def _slideshow_to_mp4(
     # 3. Build ffmpeg command
     if len(img_paths) == 1:
         cmd = [
-            "ffmpeg", "-y",
+            _resolve_binary("ffmpeg"), "-y",
             "-loop", "1",
             "-i", str(img_paths[0]),
             "-i", audio_path,
@@ -220,7 +243,7 @@ def _slideshow_to_mp4(
             f.write(f"file '{img_paths[-1].as_posix()}'\n")  # prevent last-frame drop
 
         cmd = [
-            "ffmpeg", "-y",
+            _resolve_binary("ffmpeg"), "-y",
             "-f", "concat", "-safe", "0", "-i", str(concat_path),
             "-i", audio_path,
             "-c:v", "libx264", "-tune", "stillimage",

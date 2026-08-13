@@ -1,6 +1,21 @@
 from __future__ import annotations
 
 import re
+from pathlib import Path
+
+_TMP_ROOT = Path(__file__).resolve().parent.parent / "tmp"
+
+
+def get_tmp_root() -> Path:
+    """Root directory for ephemeral download temp folders.
+
+    Placed inside the project directory rather than the OS default temp
+    folder — on Windows the latter lives on C:, which may be a small,
+    space-constrained system drive even when the app's own drive has
+    plenty of room.
+    """
+    _TMP_ROOT.mkdir(parents=True, exist_ok=True)
+    return _TMP_ROOT
 
 
 def sanitize_folder_name(account: str) -> str:
